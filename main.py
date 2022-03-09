@@ -21,7 +21,7 @@ pca = PCA(n_components=49)
 pca.fit(training_data)
 reconstructed_images = pca.transform(test_data)
 reconstructed_images = reconstructed_images.reshape((100, 7, 7, 1))
-cv2.imshow("123", reconstructed_images[0])
+cv2.imshow("1234", reconstructed_images[0])
 cv2.waitKey(0)
 # weights = pca.components_
 # print(weights)
