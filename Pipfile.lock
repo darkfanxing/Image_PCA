@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e1b58dd1c8844b755ad8226ca8bf0a56d64bf14e11ed97bf6d2c52ecb245e462"
+            "sha256": "51a296039e0b78466e6b64ef3cf35d3b37e97627cddf89f823ec9fb7bc110b5b"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -31,6 +31,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==4.29.1"
+        },
+        "idx2numpy": {
+            "hashes": [
+                "sha256:559b578a8f69a41af54cf15c8dfc43ab9f380e0a7d602a84bdabaf52acfbbd3e"
+            ],
+            "index": "pypi",
+            "version": "==1.2.3"
         },
         "joblib": {
             "hashes": [

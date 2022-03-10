@@ -1,1 +1,3 @@
-*.npy
+*/pca_weights/*
+*/data/*
+*.pyc
