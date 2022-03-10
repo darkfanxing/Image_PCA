@@ -1,6 +1,5 @@
+from np import save
 import idx2numpy
-import cv2
-import numpy as np
 import os
 
 training_data_images = idx2numpy.convert_from_file("src/data/train-images.idx3-ubyte")
