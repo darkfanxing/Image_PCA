@@ -2,7 +2,7 @@ from os.path import getsize
 from os import listdir
 from typing import List
 from sklearn.decomposition import PCA
-from numpy import array, where, save, ndarray, mean, log10
+from numpy import array, vstack, where, save, mean, log10, float16
 from utils import natural_keys
 import matplotlib.pyplot as plt
 import cv2
@@ -44,8 +44,12 @@ class MNISTPCAAnalysis():
             try:
                 pca = PCA(n_components=component_number, svd_solver="full")
                 pca.fit(self.training_data)
-                save(f"src/pca_weights/component_{component_number}.npy", pca.components_)
-                
+                save(
+                    f"src/pca_weights/component_{component_number}.npy", vstack((
+                        pca.components_.reshape(784, -1),
+                        pca.transform(self.training_data)
+                    )).astype(float16)
+                )
                 reconstructed_images = pca.inverse_transform(pca.transform(self.test_data))
                 self.psnrs.append(self._get_psnr(self.test_data, reconstructed_images))
             except:
@@ -64,8 +68,8 @@ class MNISTPCAAnalysis():
             weights_size = []
             for weight_filename in weights_filename:
                 weights_size.append(getsize(f"src/pca_weights/{weight_filename}"))
-        
-            return getsize("src/pca_weights/full_component.npy") / log10(array(weights_size[:-1])*160)
+            print(weights_size[:-1])
+            return getsize("src/pca_weights/full_component.npy") / (array(weights_size[:-1]))
 
         compression_ratios = _get_compression_ratios()
         sns.lineplot(
@@ -73,7 +77,7 @@ class MNISTPCAAnalysis():
             y=compression_ratios
         )
         plt.xlabel("number of components", fontsize=16)
-        plt.ylabel("Compression ratio (log_10)", fontsize=16)
+        plt.ylabel("Compression ratio", fontsize=16)
         plt.show()
 
     
@@ -153,7 +157,7 @@ if __name__ == "__main__":
     mnist_pca_analysis.fit()
 
     mnist_pca_analysis.plot_compression_ratios()
-    mnist_pca_analysis.plot_eigenvalue_superpositions()
-    mnist_pca_analysis.plot_psnr()
-    mnist_pca_analysis.show_reconstructed_images(n_components=5, display_images_number=5, scale=10)
-    mnist_pca_analysis.plot_eigenvectors(n_components=5, scale=10)
+    # mnist_pca_analysis.plot_eigenvalue_superpositions()
+    # mnist_pca_analysis.plot_psnr()
+    # mnist_pca_analysis.show_reconstructed_images(n_components=5, display_images_number=5, scale=10)
+    # mnist_pca_analysis.plot_eigenvectors(n_components=5, scale=10)
