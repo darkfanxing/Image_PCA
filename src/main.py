@@ -68,7 +68,6 @@ class MNISTPCAAnalysis():
             weights_size = []
             for weight_filename in weights_filename:
                 weights_size.append(getsize(f"src/pca_weights/{weight_filename}"))
-            print(weights_size[:-1])
             return getsize("src/pca_weights/full_component.npy") / (array(weights_size[:-1]))
 
         compression_ratios = _get_compression_ratios()
@@ -157,7 +156,7 @@ if __name__ == "__main__":
     mnist_pca_analysis.fit()
 
     mnist_pca_analysis.plot_compression_ratios()
-    # mnist_pca_analysis.plot_eigenvalue_superpositions()
-    # mnist_pca_analysis.plot_psnr()
-    # mnist_pca_analysis.show_reconstructed_images(n_components=5, display_images_number=5, scale=10)
-    # mnist_pca_analysis.plot_eigenvectors(n_components=5, scale=10)
+    mnist_pca_analysis.plot_eigenvalue_superpositions()
+    mnist_pca_analysis.plot_psnr()
+    mnist_pca_analysis.show_reconstructed_images(n_components=5, display_images_number=5, scale=10)
+    mnist_pca_analysis.plot_eigenvectors(n_components=5, scale=10)
