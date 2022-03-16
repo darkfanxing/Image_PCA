@@ -40,7 +40,7 @@ class MNISTPCAAnalysis():
 
     def fit(self) -> None:
         self.psnrs = []
-        for component_number in range(self.training_data.shape[1]):
+        for component_number in range(1, self.training_data.shape[1]+1, 1):
             try:
                 pca = PCA(n_components=component_number, svd_solver="full")
                 pca.fit(self.training_data)
@@ -67,6 +67,7 @@ class MNISTPCAAnalysis():
             weights_filename.sort(key=natural_keys)
             weights_size = []
             for weight_filename in weights_filename:
+                print(getsize(f"src/pca_weights/{weight_filename}"))
                 weights_size.append(getsize(f"src/pca_weights/{weight_filename}"))
             return getsize("src/pca_weights/full_component.npy") / (array(weights_size[:-1]))
 
