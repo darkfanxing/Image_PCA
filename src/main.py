@@ -47,7 +47,7 @@ class MNISTPCAAnalysis():
                 save(
                     f"src/pca_weights/component_{component_number}.npy", vstack((
                         pca.components_.reshape(784, -1),
-                        pca.transform(self.training_data)
+                        pca.transform(self.test_data)
                     )).astype(float16)
                 )
                 reconstructed_images = pca.inverse_transform(pca.transform(self.test_data))
@@ -67,7 +67,6 @@ class MNISTPCAAnalysis():
             weights_filename.sort(key=natural_keys)
             weights_size = []
             for weight_filename in weights_filename:
-                print(getsize(f"src/pca_weights/{weight_filename}"))
                 weights_size.append(getsize(f"src/pca_weights/{weight_filename}"))
             return getsize("src/pca_weights/full_component.npy") / (array(weights_size[:-1]))
 
@@ -84,7 +83,7 @@ class MNISTPCAAnalysis():
     def plot_psnr(self) -> None:
         sns.lineplot(
             x=list(range(len(self.psnrs))),
-            y=array(log10(self.psnrs)),
+            y=array(self.psnrs),
         )
         plt.xlabel("number of components", fontsize=16)
         plt.ylabel("PSNR", fontsize=16)
@@ -110,20 +109,18 @@ class MNISTPCAAnalysis():
         plt.show()
 
 
-    def plot_eigenvectors(self, n_components=5, scale=10) -> None:
-        for index in range(n_components):
-            cv2.imshow(
-                "Eigenvector",
-                cv2.resize(
-                    (self.eigenvectors[index]*self.eigenvalues[index]).reshape(28, 28, 1), (0, 0), fx=scale, fy=scale)
-                )
-            cv2.waitKey(0)
+    def plot_eigenvectors(self, n_components=[10, 80, 150], scale=10) -> None:
+        for component_number in n_components:
+            plt.figure()
+            plt.imshow(self.eigenvectors[component_number].reshape(28, 28, 1), cmap="jet")
+            plt.title(f"component number {component_number}")
+        plt.show()
 
 
-    def show_reconstructed_images(self, n_components=5, display_images_number=5, scale=10) -> None:
+    def show_reconstructed_images(self, n_components=[10, 80, 150], display_images_number=5, scale=10) -> None:
         if display_images_number > 0 and display_images_number <= self.test_data.shape[0]:
             # is_escape = False
-            for component_number in range(n_components):
+            for component_number in n_components:
                 pca = PCA(n_components=component_number, svd_solver="full")
                 pca.fit(self.training_data)
                 reconstructed_images = pca.inverse_transform(pca.transform(self.test_data))
@@ -156,8 +153,8 @@ if __name__ == "__main__":
     mnist_pca_analysis = MNISTPCAAnalysis()
     mnist_pca_analysis.fit()
 
-    mnist_pca_analysis.plot_compression_ratios()
-    mnist_pca_analysis.plot_eigenvalue_superpositions()
-    mnist_pca_analysis.plot_psnr()
-    mnist_pca_analysis.show_reconstructed_images(n_components=5, display_images_number=5, scale=10)
-    mnist_pca_analysis.plot_eigenvectors(n_components=5, scale=10)
+    # mnist_pca_analysis.plot_compression_ratios()
+    # mnist_pca_analysis.plot_eigenvalue_superpositions()
+    # mnist_pca_analysis.plot_psnr()
+    # mnist_pca_analysis.show_reconstructed_images(n_components=[10, 80, 150], display_images_number=5, scale=10)
+    mnist_pca_analysis.plot_eigenvectors(n_components=[10, 50, 80, 150], scale=10)
